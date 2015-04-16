@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="QPN-Sp-zKn">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <scenes>
+        <!--Story View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="StoryViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pvj-vX-ZwR">
+                                <rect key="frame" x="268" y="284" width="64.5" height="32.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TZe-g5-nwv">
+                                <rect key="frame" x="275" y="386" width="49" height="40"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                <state key="normal" title="Start">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cMD-HW-R1d">
+                                <rect key="frame" x="314" y="386" width="54" height="40"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                <state key="normal" title="Done">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3fe-5F-5OO">
+                                <rect key="frame" x="227" y="386" width="58" height="40"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                <state key="normal" title="Reset">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FMA-9q-QWd">
+                                <rect key="frame" x="263" y="386" width="70" height="40"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="T6q-mr-bQ5">
+                                <rect key="frame" x="282" y="282" width="37" height="37"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="TZe-g5-nwv" firstAttribute="centerY" secondItem="cMD-HW-R1d" secondAttribute="centerY" id="0uo-Gu-xww"/>
+                            <constraint firstItem="TZe-g5-nwv" firstAttribute="top" secondItem="Pvj-vX-ZwR" secondAttribute="bottom" constant="69.5" id="ESt-37-CKx"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Pvj-vX-ZwR" secondAttribute="bottom" constant="290" id="HBE-wp-nvH"/>
+                            <constraint firstItem="TZe-g5-nwv" firstAttribute="leading" secondItem="3fe-5F-5OO" secondAttribute="trailing" constant="-10" id="KQX-8f-YOG"/>
+                            <constraint firstItem="3fe-5F-5OO" firstAttribute="centerY" secondItem="TZe-g5-nwv" secondAttribute="centerY" id="M2d-YB-TVE"/>
+                            <constraint firstItem="Pvj-vX-ZwR" firstAttribute="centerX" secondItem="T6q-mr-bQ5" secondAttribute="centerX" id="QRu-gA-Hhu"/>
+                            <constraint firstAttribute="centerY" secondItem="Pvj-vX-ZwR" secondAttribute="centerY" id="VUz-y0-M6O"/>
+                            <constraint firstItem="cMD-HW-R1d" firstAttribute="leading" secondItem="TZe-g5-nwv" secondAttribute="trailing" constant="-10" id="YfY-WJ-2aX"/>
+                            <constraint firstItem="Pvj-vX-ZwR" firstAttribute="centerY" secondItem="T6q-mr-bQ5" secondAttribute="centerY" id="aE7-HH-Zoe"/>
+                            <constraint firstAttribute="centerX" secondItem="TZe-g5-nwv" secondAttribute="centerX" id="bmK-sN-uOe"/>
+                            <constraint firstItem="Pvj-vX-ZwR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="cCg-gP-cmC"/>
+                            <constraint firstItem="FMA-9q-QWd" firstAttribute="centerY" secondItem="TZe-g5-nwv" secondAttribute="centerY" id="jdA-MV-yyd"/>
+                            <constraint firstItem="FMA-9q-QWd" firstAttribute="centerX" secondItem="TZe-g5-nwv" secondAttribute="centerX" constant="-1.5" id="kCL-OM-GAc"/>
+                            <constraint firstAttribute="centerY" secondItem="Pvj-vX-ZwR" secondAttribute="centerY" constant="1" id="rLq-tl-p6g"/>
+                            <constraint firstItem="Pvj-vX-ZwR" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="225" id="zqi-PK-HYf"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="rLq-tl-p6g"/>
+                                <exclude reference="zqi-PK-HYf"/>
+                                <exclude reference="HBE-wp-nvH"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" id="T0M-jM-iks"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="T6q-mr-bQ5" id="AIY-g6-wEW"/>
+                        <outlet property="cancelButton" destination="FMA-9q-QWd" id="eq1-2g-2De"/>
+                        <outlet property="doneButton" destination="cMD-HW-R1d" id="ZEC-va-6rf"/>
+                        <outlet property="resetButton" destination="3fe-5F-5OO" id="Dfl-zw-rTD"/>
+                        <outlet property="startButton" destination="TZe-g5-nwv" id="ltt-Ez-bLO"/>
+                        <outlet property="timerLabel" destination="Pvj-vX-ZwR" id="ktO-id-Bbk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1117" y="360"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Plo-5h-iMD">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="QPN-Sp-zKn" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="tFL-96-HvT">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="ast-ex-mEj"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gcg-gX-39N" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="566" y="353"/>
+        </scene>
+    </scenes>
+</document>
