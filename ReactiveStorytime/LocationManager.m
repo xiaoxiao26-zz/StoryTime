@@ -7,6 +7,7 @@
 //
 
 #import <CoreLocation/CoreLocation.h>
+#import <AFNetworking-RACExtensions/RACAFNetworking.h>
 
 
 #import "LocationManager.h"
@@ -56,11 +57,13 @@
     
     
     
-    self.locationSubject = [RACSubject subject];
+    _locationSubject = [RACSubject subject];
     
-    self.locationManager = [[CLLocationManager alloc] init];
+    _locationManager = [[CLLocationManager alloc] init];
     
-    self.locationManager.delegate = self;
+    _locationManager.delegate = self;
+    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [_locationManager requestAlwaysAuthorization];
     
     
     
@@ -68,11 +71,9 @@
 }
 
 
-
-- (RACSignal *)foundLocationSignal {
+- (RACSignal *)updatedLocationSignal {
     
     return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-        
         @synchronized(self) {
             
             if(self.numberOfLocationSubscribers == 0) {
@@ -82,8 +83,9 @@
             }
             
             ++self.numberOfLocationSubscribers;
-        
+            
         }
+        
         [self.locationSubject subscribe:subscriber];
         
         return [RACDisposable disposableWithBlock:^{
@@ -95,15 +97,44 @@
                 if(self.numberOfLocationSubscribers == 0) {
                     
                     [self.locationManager stopUpdatingLocation];
-                
+                    
                 }
                 
             }
             
         }];
-        
     }];
 }
+
+- (BOOL)locationInRange:(CLLocation *)location
+{
+    return YES;
+}
+
+- (NSNumber *)foundDestination
+{
+    return @(NO);
+}
+
+- (RACSignal *)foundLocationSignalWithTargets:(NSDictionary *)targets {
+    return [[[self updatedLocationSignal]
+            filter:^BOOL(CLLocation *newLocation) {
+                return [self locationInRange:newLocation];
+            }]
+            map:^id(CLLocation *newLocation) {
+                return RACTuplePack([self foundDestination], [self fetchNextStorySignal]);
+            }];
+}
+
+- (RACSignal *)fetchNextStorySignal {
+    NSString *url = @"http://localhost:8080/story";
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    NSDictionary *params = @{@"lat":@"37.4292", @"lng":@"-122.13181"};
+    return [manager rac_GET:url parameters:params];
+    
+}
+
 
 # pragma mark - CLLocationManagerDelegate 
 

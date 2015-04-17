@@ -11,6 +11,7 @@
 #import <AFNetworking-RACExtensions/RACAFNetworking.h>
 #import "StoryManager.h"
 #import "LocationManager.h"
+#import "Globals.h"
 
 @interface StoryViewController ()
 
@@ -48,18 +49,15 @@
     RACSignal *doneOrReset = [RACSignal merge:@[done, reset]];
     
     self.fetchFirstStoryCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id _) {
-        return [[[StoryManager sharedManager] fetchStorySignal] takeUntil:cancel];
+        return [[self fetchStorySignal] takeUntil:cancel];
     }];
-
-
-    
     [self.fetchFirstStoryCommand.executionSignals.switchToLatest subscribeNext:^(NSDictionary *result) {
         [self startNextChapterWithContents:result cancelSignal:doneOrReset];
         [self.timerCommand execute:nil];
     }];
     
-    self.fetchNextStoryCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
-        return [[[StoryManager sharedManager] fetchNextStorySignal] takeUntil:doneOrReset];
+    self.fetchNextStoryCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(RACSignal *fetchNextStorySignal) {
+        return [fetchNextStorySignal takeUntil:doneOrReset];
     }];
     
     [self.fetchNextStoryCommand.executionSignals.switchToLatest subscribeNext:^(NSDictionary *result) {
@@ -75,9 +73,8 @@
         return [[self timerSignal] takeUntil:doneOrReset];
     }];
     
-    self.startButton.rac_command = self.fetchFirstStoryCommand;
-
     
+    self.startButton.rac_command = self.fetchFirstStoryCommand;
     self.resetButton.rac_command = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
         @weakify(self)
         return [[RACObserve(self.timerCommand, executing)
@@ -93,24 +90,37 @@
     }];
 }
 
+- (RACSignal *)fetchStorySignal {
+    NSString *url = @"http://localhost:8080/story";
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    NSDictionary *params = @{@"lat":@"37.4292", @"lng":@"-122.13181"};
+    return [manager rac_GET:url parameters:params];
+}
+
+
 - (void)startNextChapterWithContents:(NSDictionary *)result cancelSignal:cancelSignal
 {
-    [[StoryManager sharedManager] tellStoryWithContents:result];
-    [[LocationManager sharedManager] searchForLocationsInContent:result];
     
-    RACSignal *nextStorySignal = [[RACSignal zip:@[[[StoryManager sharedManager] storySignal],
-                                                   [[LocationManager sharedManager] foundLocationSignal]]
-                                          reduce:^id(id _, NSNumber *last){
-                                              return last;
-                                          }]
-                                            take:1];
+    NSDictionary *targets = result[@"json"];
+    NSString *story = result[@"text"];
     
-    [nextStorySignal subscribeNext:^(NSNumber *last) {
+    RACSignal *nextStorySignal = [[[RACSignal
+                                    zip:@[[[StoryManager sharedManager] storySignalWithStory:story],
+                                          [[LocationManager sharedManager] foundLocationSignalWithTargets:targets]]
+                                    reduce:^id(id _, RACTuple *tuple){
+                                        return tuple;
+                                    }]
+                                    take:1]
+                                    takeUntil:cancelSignal];
+    
+    [nextStorySignal subscribeNext:^(RACTuple *tuple) {
+        RACTupleUnpack(NSNumber *last, RACSignal *fetchNextStorySignal) = tuple;
         BOOL isDestination = last.boolValue;
         if (isDestination) {
             [self reachedDestination];
         } else {
-            [self.fetchNextStoryCommand execute:nil];
+            [self.fetchNextStoryCommand execute:fetchNextStorySignal];
         }
     }];
 }
@@ -121,14 +131,13 @@
 }
 
 - (void)bindUI {
-    RACSignal *startButtonHidden = [RACSignal combineLatest:@[self.fetchNextStoryCommand.executing,
+    RACSignal *startButtonHidden = [RACSignal combineLatest:@[self.fetchFirstStoryCommand.executing,
                                                               self.timerCommand.executing]
-                                                     reduce:^id(NSNumber *next, NSNumber *start, NSNumber *timer){
+                                                     reduce:^id(NSNumber *start, NSNumber *timer){
                                                          BOOL fetchingStory = start.boolValue;
-                                                         BOOL fetchingNext = next.boolValue;
                                                          BOOL timing = timer.boolValue;
                                                 
-                                                         return @(fetchingStory || timing || fetchingNext);
+                                                         return @(fetchingStory || timing);
                                                      }];
     
     RAC(self.startButton, hidden) = startButtonHidden;

@@ -11,10 +11,7 @@
 
 @interface StoryManager : NSObject
 
-- (RACSignal *)storySignal;
-- (void)tellStoryWithContents:(NSDictionary *)contents;
-- (RACSignal *)fetchStorySignal;
-- (RACSignal *)fetchNextStorySignal;
+- (RACSignal *)storySignalWithStory:(NSString *)story;
 + (instancetype)sharedManager;
 
 

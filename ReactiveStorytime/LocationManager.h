@@ -11,8 +11,7 @@
 
 @interface LocationManager : NSObject
 
-- (RACSignal *)foundLocationSignal;
-- (void)searchForLocationsInContent:(NSDictionary *)content;
+- (RACSignal *)foundLocationSignalWithTargets:(NSDictionary *)targets;
 + (LocationManager*) sharedManager;
 
 @end

@@ -10,20 +10,31 @@
 #import "StoryManager.h"
 #import <AFNetworking-RACExtensions/RACAFNetworking.h>
 #import <AVFoundation/AVFoundation.h>
+#import "Globals.h"
 
 #define SENTENCE_DELAY 5.0
 
-@interface StoryManager()
+@interface StoryManager() <AVSpeechSynthesizerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *storySentences;
-@property (nonatomic, strong) NSDictionary *json;
-@property (nonatomic, strong) RACSignal *nextStory;
+@property (nonatomic, strong) RACSubject *finishedStorySubject;
+@property (nonatomic, strong) AVSpeechSynthesizer *speechSynthesizer;
 
 @end
 
 
 @implementation StoryManager
 
+
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _finishedStorySubject = [RACSubject subject];
+        _speechSynthesizer = [[AVSpeechSynthesizer alloc] init];
+        _speechSynthesizer.delegate = self;
+    }
+    return self;
+}
 
 + (instancetype)sharedManager
 {
@@ -35,45 +46,63 @@
     return manager;
 }
 
-- (void)tellStory:(NSString *)story withJson:(NSDictionary *)json cancelSignal:(RACSignal *)cancelSignal {
-    
+
+
+- (RACSignal *)storySignalWithStory:(NSString *)story {
+    self.storySentences = [[story componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@".?!"]] mutableCopy];
+
+    return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        if (self.storySentences.count) {
+            [self.finishedStorySubject subscribe:subscriber];
+            [self speakNextUtterance];
+            
+        } else {
+            [subscriber sendError:[NSError errorWithDomain:kStoryErrorDomain
+                                                      code:StoryErrorEmpty
+                                                  userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"Recieved an empty story", nil)}]];
+        }
+        
+        return [RACDisposable disposableWithBlock:^{
+            [self.storySentences removeAllObjects];
+            [self stopSpeech];
+        }];
+    }];
+}
+
+- (void)stopSpeech
+{
+    if([_speechSynthesizer isSpeaking]) {
+        [_speechSynthesizer stopSpeakingAtBoundary:AVSpeechBoundaryImmediate];
+        AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:@""];
+        [_speechSynthesizer speakUtterance:utterance];
+        [_speechSynthesizer stopSpeakingAtBoundary:AVSpeechBoundaryImmediate];
+    }
 }
 
 
-- (RACSignal *)tellStorySignal:(NSString *)story withJson:(NSDictionary *)json cancelSignal:(RACSignal *)cancelSignal {
-    self.storySentences = [[story componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@".?!"]] mutableCopy];
-    self.json = json;
+- (void)speakNextUtterance {
+    NSString *nextText = self.storySentences[0];
+    [self.storySentences removeObjectAtIndex:0];
     
+    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:nextText];
+    utterance.pitchMultiplier = 0.8;
+    utterance.rate = 0.07;
+    utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-GB"];
     
-    
-    RACSignal *speech = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-        
-    }];
-    
-    return
+    [self.speechSynthesizer speakUtterance:utterance];
 }
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance {
-    
+    if (self.storySentences.count) {
+        [self performSelector:@selector(speakNextUtterance)
+                   withObject:nil
+                   afterDelay:1.0];
+    } else {
+        [self.finishedStorySubject sendNext:nil];
+    }
 }
 
-- (RACSignal *)fetchStorySignal {
-    NSString *url = @"http://localhost:8080/story";
-    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    NSDictionary *params = @{@"lat":@"37.4292", @"lng":@"-122.13181"};
-    return [manager rac_GET:url parameters:params];
-}
 
-- (RACSignal *)fetchNextStorySignal {
-    NSString *url = @"http://localhost:8080/story";
-    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    NSDictionary *params = @{@"lat":@"37.4292", @"lng":@"-122.13181"};
-    return [manager rac_GET:url parameters:params];
-
-    
-}
 
 
 @end

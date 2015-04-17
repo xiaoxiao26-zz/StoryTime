@@ -17,6 +17,7 @@
 		7FC6F0CF1AAC379400127390 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7FC6F0CD1AAC379400127390 /* LaunchScreen.xib */; };
 		7FC6F0DB1AAC379400127390 /* ReactiveStorytimeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FC6F0DA1AAC379400127390 /* ReactiveStorytimeTests.m */; };
 		7FCE7D711ADF948600127196 /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE7D701ADF948600127196 /* LocationManager.m */; };
+		7FCE7D741AE0725700127196 /* Globals.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE7D731AE0725700127196 /* Globals.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,8 @@
 		7FC6F0DA1AAC379400127390 /* ReactiveStorytimeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReactiveStorytimeTests.m; sourceTree = "<group>"; };
 		7FCE7D6F1ADF948600127196 /* LocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationManager.h; sourceTree = "<group>"; };
 		7FCE7D701ADF948600127196 /* LocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationManager.m; sourceTree = "<group>"; };
+		7FCE7D721AE0725700127196 /* Globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Globals.h; sourceTree = "<group>"; };
+		7FCE7D731AE0725700127196 /* Globals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Globals.m; sourceTree = "<group>"; };
 		AC4919FA40860F1F5182EF1C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,6 +113,8 @@
 				7FCE7D701ADF948600127196 /* LocationManager.m */,
 				7FB6696A1AB7CFC7005B26EB /* StoryManager.h */,
 				7FB6696B1AB7CFC7005B26EB /* StoryManager.m */,
+				7FCE7D721AE0725700127196 /* Globals.h */,
+				7FCE7D731AE0725700127196 /* Globals.m */,
 				7FC6F0C81AAC379400127390 /* Main.storyboard */,
 				7FC6F0CB1AAC379400127390 /* Images.xcassets */,
 				7FC6F0CD1AAC379400127390 /* LaunchScreen.xib */,
@@ -292,6 +297,7 @@
 				7FCE7D711ADF948600127196 /* LocationManager.m in Sources */,
 				7FB6696C1AB7CFC7005B26EB /* StoryManager.m in Sources */,
 				7FC6F0C41AAC379400127390 /* AppDelegate.m in Sources */,
+				7FCE7D741AE0725700127196 /* Globals.m in Sources */,
 				7FC6F0C11AAC379400127390 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
