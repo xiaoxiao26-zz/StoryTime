@@ -10,8 +10,9 @@
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <AFNetworking-RACExtensions/RACAFNetworking.h>
 #import "StoryManager.h"
-#import "LocationManager.h"
+#import "StoryLocationManager.h"
 #import "Globals.h"
+#import "TargetLocation.h"
 #import <MapKit/MapKit.h>
 
 @interface StoryViewController ()
@@ -22,11 +23,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *resetButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIButton *targetBButton;
+@property (weak, nonatomic) IBOutlet UIButton *targetAButton;
 
 @property (strong, nonatomic) RACCommand *timerCommand;
 
 @property (strong, nonatomic) RACCommand *fetchFirstStoryCommand;
 @property (strong, nonatomic) RACCommand *fetchNextStoryCommand;
+@property (strong, nonatomic) RACSubject *finishedRunSubject;
 
 
 @end
@@ -37,7 +41,8 @@
     [super viewDidLoad];
     self.title = @"Storytime";
     self.timerLabel.text = @"";
-    
+    self.targetAButton.titleLabel.numberOfLines = 3;
+    self.targetBButton.titleLabel.numberOfLines = 3;
     [self setUpCommands];
     [self bindUI];
 }
@@ -50,7 +55,7 @@
     RACSignal *doneOrReset = [RACSignal merge:@[done, reset]];
     
     self.fetchFirstStoryCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id _) {
-        return [[[LocationManager sharedManager] fetchStorySignal] takeUntil:cancel];
+        return [[[StoryLocationManager sharedManager] fetchStorySignal] takeUntil:cancel];
     }];
     [self.fetchFirstStoryCommand.executionSignals.switchToLatest subscribeNext:^(NSDictionary *result) {
         [self startNextChapterWithContents:result cancelSignal:doneOrReset];
@@ -58,7 +63,6 @@
     }];
     
     self.fetchNextStoryCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(RACSignal *fetchNextStorySignal) {
-        
         return [fetchNextStorySignal takeUntil:doneOrReset];
     }];
     
@@ -71,8 +75,9 @@
             [self showAlertWithTitle:@"Loading Story Error" message:error.localizedDescription];
     }];
     
+    self.finishedRunSubject = [RACSubject subject];
     self.timerCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
-        return [[self timerSignal] takeUntil:doneOrReset];
+        return [[[self timerSignal] takeUntil:doneOrReset] takeUntil:self.finishedRunSubject];
     }];
     
     
@@ -88,7 +93,7 @@
     }];
     
     [done subscribeNext:^(id x) {
-        [self finishedRun];
+        [self finishedRunEarly];
     }];
 }
 
@@ -97,13 +102,13 @@
 - (void)startNextChapterWithContents:(NSDictionary *)result cancelSignal:cancelSignal
 {
     
-    NSString *story = result[@"text"];
-    NSLog(@"%@", result);
-    
-    
+    NSString *story = result[kStoryKey];
+//    NSArray *targets = [result valueForKeyPath:kTargetKey];
+//    [self.targetAButton setTitle:targets[0][@"name"] forState:UIControlStateNormal];
+//    NSLog(@"%@", result);
     RACSignal *nextStorySignal = [[[RACSignal
                                     zip:@[[[StoryManager sharedManager] storySignalWithStory:story],
-                                          [[LocationManager sharedManager] foundLocationSignalWithJson:result]]
+                                          [[StoryLocationManager sharedManager] foundLocationSignalWithJson:result]]
                                     reduce:^id(id _, RACTuple *tuple){
                                         return tuple;
                                     }]
@@ -115,7 +120,7 @@
         RACTupleUnpack(NSNumber *last, RACSignal *fetchNextStorySignal) = tuple;
         BOOL isDestination = last.boolValue;
         if (isDestination) {
-            [self reachedDestination];
+            [self finishedRun];
         } else {
 
             [self.fetchNextStoryCommand execute:fetchNextStorySignal];
@@ -123,9 +128,9 @@
     }];
 }
 
-- (void)reachedDestination
+- (void)finishedRun
 {
-    
+    [self.finishedRunSubject sendNext:nil];
 }
 
 - (void)bindUI {
@@ -145,12 +150,30 @@
     RAC(self.doneButton, hidden) = self.timerCommand.executing.not;
     RAC(self.resetButton, hidden) = self.timerCommand.executing.not;
     
+    RAC(self.targetBButton, hidden) = self.timerCommand.executing.not;
+    RAC(self.targetAButton, hidden) = self.timerCommand.executing.not;
+    
     RAC(self.cancelButton, hidden) = self.fetchFirstStoryCommand.executing.not;
     RAC(self.activityIndicator, hidden) = self.fetchFirstStoryCommand.executing.not;
-    RAC([UIApplication sharedApplication], networkActivityIndicatorVisible) = self.fetchFirstStoryCommand.executing;
+    
+    [self.targetAButton rac_liftSelector:@selector(setTitle:forState:)
+                             withSignals:[RACObserve([StoryLocationManager sharedManager], targetA)
+                                          map:^id(TargetLocation *target) {
+                                              return target.name;
+                                          }],
+                                         [RACSignal return:@(UIControlStateNormal)], nil];
+    
+    [self.targetBButton rac_liftSelector:@selector(setTitle:forState:)
+                             withSignals:[RACObserve([StoryLocationManager sharedManager], targetB)
+                                          map:^id(TargetLocation *target) {
+                                              return target.name;
+                                          }],
+                                         [RACSignal return:@(UIControlStateNormal)], nil];
+
+    RAC([UIApplication sharedApplication], networkActivityIndicatorVisible) = [RACSignal merge:@[self.fetchFirstStoryCommand.executing, self.fetchNextStoryCommand.executing]];
 }
 
-- (void)finishedRun {
+- (void)finishedRunEarly {
     
 }
 

@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import "TargetLocation.h"
 
-@interface LocationManager : NSObject
+@interface StoryLocationManager : NSObject
+
+@property (strong, nonatomic) TargetLocation *targetA;
+@property (strong, nonatomic) TargetLocation *targetB;
 
 - (RACSignal *)foundLocationSignalWithJson:(NSDictionary *)json;
-+ (LocationManager*) sharedManager;
++ (StoryLocationManager*) sharedManager;
 - (RACSignal *)updatedLocationSignal;
 - (RACSignal *)fetchStorySignal;
 

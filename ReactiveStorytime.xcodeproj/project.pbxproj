@@ -16,7 +16,7 @@
 		7FC6F0CC1AAC379400127390 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FC6F0CB1AAC379400127390 /* Images.xcassets */; };
 		7FC6F0CF1AAC379400127390 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7FC6F0CD1AAC379400127390 /* LaunchScreen.xib */; };
 		7FC6F0DB1AAC379400127390 /* ReactiveStorytimeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FC6F0DA1AAC379400127390 /* ReactiveStorytimeTests.m */; };
-		7FCE7D711ADF948600127196 /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE7D701ADF948600127196 /* LocationManager.m */; };
+		7FCE7D711ADF948600127196 /* StoryLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE7D701ADF948600127196 /* StoryLocationManager.m */; };
 		7FCE7D741AE0725700127196 /* Globals.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE7D731AE0725700127196 /* Globals.m */; };
 		7FF19A0A1AE334B2008E7412 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FF19A091AE334B2008E7412 /* MapKit.framework */; };
 		7FF19A0D1AE343B7008E7412 /* TargetLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FF19A0C1AE343B7008E7412 /* TargetLocation.m */; };
@@ -50,8 +50,8 @@
 		7FC6F0D41AAC379400127390 /* ReactiveStorytimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReactiveStorytimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FC6F0D91AAC379400127390 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7FC6F0DA1AAC379400127390 /* ReactiveStorytimeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReactiveStorytimeTests.m; sourceTree = "<group>"; };
-		7FCE7D6F1ADF948600127196 /* LocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationManager.h; sourceTree = "<group>"; };
-		7FCE7D701ADF948600127196 /* LocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationManager.m; sourceTree = "<group>"; };
+		7FCE7D6F1ADF948600127196 /* StoryLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoryLocationManager.h; sourceTree = "<group>"; };
+		7FCE7D701ADF948600127196 /* StoryLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoryLocationManager.m; sourceTree = "<group>"; };
 		7FCE7D721AE0725700127196 /* Globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Globals.h; sourceTree = "<group>"; };
 		7FCE7D731AE0725700127196 /* Globals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Globals.m; sourceTree = "<group>"; };
 		7FF19A091AE334B2008E7412 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -116,8 +116,8 @@
 				7FC6F0C31AAC379400127390 /* AppDelegate.m */,
 				7FC6F0C51AAC379400127390 /* StoryViewController.h */,
 				7FC6F0C61AAC379400127390 /* StoryViewController.m */,
-				7FCE7D6F1ADF948600127196 /* LocationManager.h */,
-				7FCE7D701ADF948600127196 /* LocationManager.m */,
+				7FCE7D6F1ADF948600127196 /* StoryLocationManager.h */,
+				7FCE7D701ADF948600127196 /* StoryLocationManager.m */,
 				7FF19A0B1AE343B7008E7412 /* TargetLocation.h */,
 				7FF19A0C1AE343B7008E7412 /* TargetLocation.m */,
 				7FB6696A1AB7CFC7005B26EB /* StoryManager.h */,
@@ -303,7 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FC6F0C71AAC379400127390 /* StoryViewController.m in Sources */,
-				7FCE7D711ADF948600127196 /* LocationManager.m in Sources */,
+				7FCE7D711ADF948600127196 /* StoryLocationManager.m in Sources */,
 				7FB6696C1AB7CFC7005B26EB /* StoryManager.m in Sources */,
 				7FF19A0D1AE343B7008E7412 /* TargetLocation.m in Sources */,
 				7FC6F0C41AAC379400127390 /* AppDelegate.m in Sources */,

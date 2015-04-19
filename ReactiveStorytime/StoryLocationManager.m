@@ -10,14 +10,12 @@
 #import <AFNetworking-RACExtensions/RACAFNetworking.h>
 
 #import <MapKit/MapKit.h>
-#import "LocationManager.h"
+#import "StoryLocationManager.h"
 #import "Globals.h"
 #import "TargetLocation.h"
 
 
-@interface LocationManager() <CLLocationManagerDelegate>
-
-
+@interface StoryLocationManager() <CLLocationManagerDelegate>
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
@@ -25,28 +23,25 @@
 @property (readwrite, nonatomic) int numberOfLocationSubscribers;
 @property (strong, nonatomic) NSDictionary *json;
 
-@property (strong, nonatomic) TargetLocation *targetA;
-@property (strong, nonatomic) TargetLocation *targetB;
-
 @end
 
 
 
-@implementation LocationManager
+@implementation StoryLocationManager
 
 NSUInteger const RADIUS_OF_DETECTION = 1000000;
 NSUInteger const LAST_CHAPTER = 5;
 NSString * const STORY_URL = @"http://localhost:8080/story";
 
-+ (LocationManager*) sharedManager {
++ (instancetype) sharedManager {
     
-    static LocationManager *sharedLocationManager;
+    static StoryLocationManager *sharedLocationManager;
     
     static dispatch_once_t onceToken;
     
     dispatch_once(&onceToken, ^{
         
-        sharedLocationManager = [[LocationManager alloc] init];
+        sharedLocationManager = [[StoryLocationManager alloc] init];
         
     });
     
@@ -130,7 +125,7 @@ NSString * const STORY_URL = @"http://localhost:8080/story";
 
 - (RACSignal *)foundLocationSignalWithJson:(NSDictionary *)json {
     self.json = json[@"json"];
-
+    
     NSArray *targets = [json valueForKeyPath:kTargetKey];
     self.targetA = [[TargetLocation alloc] initWithDictionary:targets[0]];
     self.targetB = [[TargetLocation alloc] initWithDictionary:targets[1]];
@@ -179,10 +174,7 @@ NSString * const STORY_URL = @"http://localhost:8080/story";
                                                          error:nil];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     return jsonString;
-
 }
-
-
 
 # pragma mark - CLLocationManagerDelegate
 
