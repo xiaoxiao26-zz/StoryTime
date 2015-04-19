@@ -81,15 +81,18 @@
 
 
 - (void)speakNextUtterance {
-    NSString *nextText = self.storySentences[0];
-    [self.storySentences removeObjectAtIndex:0];
-    
-    AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:nextText];
-    utterance.pitchMultiplier = 0.8;
-    utterance.rate = 0.07;
-    utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-GB"];
-    
-    [self.speechSynthesizer speakUtterance:utterance];
+    if (self.storySentences.count) {
+        NSString *nextText = self.storySentences[0];
+        [self.storySentences removeObjectAtIndex:0];
+        
+        AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:nextText];
+        utterance.pitchMultiplier = 0.8;
+        utterance.rate = 10.0;
+        utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-GB"];
+        
+        [self.speechSynthesizer speakUtterance:utterance];
+    }
+   
 }
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance {
@@ -98,6 +101,7 @@
                    withObject:nil
                    afterDelay:1.0];
     } else {
+        NSLog(@"finsihed story!");
         [self.finishedStorySubject sendNext:nil];
     }
 }

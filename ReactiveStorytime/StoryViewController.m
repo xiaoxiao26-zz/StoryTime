@@ -12,6 +12,7 @@
 #import "StoryManager.h"
 #import "LocationManager.h"
 #import "Globals.h"
+#import <MapKit/MapKit.h>
 
 @interface StoryViewController ()
 
@@ -49,7 +50,7 @@
     RACSignal *doneOrReset = [RACSignal merge:@[done, reset]];
     
     self.fetchFirstStoryCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id _) {
-        return [[self fetchStorySignal] takeUntil:cancel];
+        return [[[LocationManager sharedManager] fetchStorySignal] takeUntil:cancel];
     }];
     [self.fetchFirstStoryCommand.executionSignals.switchToLatest subscribeNext:^(NSDictionary *result) {
         [self startNextChapterWithContents:result cancelSignal:doneOrReset];
@@ -57,6 +58,7 @@
     }];
     
     self.fetchNextStoryCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(RACSignal *fetchNextStorySignal) {
+        
         return [fetchNextStorySignal takeUntil:doneOrReset];
     }];
     
@@ -90,24 +92,18 @@
     }];
 }
 
-- (RACSignal *)fetchStorySignal {
-    NSString *url = @"http://localhost:8080/story";
-    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    NSDictionary *params = @{@"lat":@"37.4292", @"lng":@"-122.13181"};
-    return [manager rac_GET:url parameters:params];
-}
 
 
 - (void)startNextChapterWithContents:(NSDictionary *)result cancelSignal:cancelSignal
 {
     
-    NSDictionary *targets = result[@"json"];
     NSString *story = result[@"text"];
+    NSLog(@"%@", result);
+    
     
     RACSignal *nextStorySignal = [[[RACSignal
                                     zip:@[[[StoryManager sharedManager] storySignalWithStory:story],
-                                          [[LocationManager sharedManager] foundLocationSignalWithTargets:targets]]
+                                          [[LocationManager sharedManager] foundLocationSignalWithJson:result]]
                                     reduce:^id(id _, RACTuple *tuple){
                                         return tuple;
                                     }]
@@ -115,11 +111,13 @@
                                     takeUntil:cancelSignal];
     
     [nextStorySignal subscribeNext:^(RACTuple *tuple) {
+
         RACTupleUnpack(NSNumber *last, RACSignal *fetchNextStorySignal) = tuple;
         BOOL isDestination = last.boolValue;
         if (isDestination) {
             [self reachedDestination];
         } else {
+
             [self.fetchNextStoryCommand execute:fetchNextStorySignal];
         }
     }];

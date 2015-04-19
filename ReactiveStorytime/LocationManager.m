@@ -9,8 +9,11 @@
 #import <CoreLocation/CoreLocation.h>
 #import <AFNetworking-RACExtensions/RACAFNetworking.h>
 
-
+#import <MapKit/MapKit.h>
 #import "LocationManager.h"
+#import "Globals.h"
+#import "TargetLocation.h"
+
 
 @interface LocationManager() <CLLocationManagerDelegate>
 
@@ -19,10 +22,11 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
 @property (strong, nonatomic) RACSubject *locationSubject;
-
 @property (readwrite, nonatomic) int numberOfLocationSubscribers;
+@property (strong, nonatomic) NSDictionary *json;
 
-
+@property (strong, nonatomic) TargetLocation *targetA;
+@property (strong, nonatomic) TargetLocation *targetB;
 
 @end
 
@@ -30,21 +34,23 @@
 
 @implementation LocationManager
 
-
+NSUInteger const RADIUS_OF_DETECTION = 1000000;
+NSUInteger const LAST_CHAPTER = 5;
+NSString * const STORY_URL = @"http://localhost:8080/story";
 
 + (LocationManager*) sharedManager {
     
-    static LocationManager *_locationManager;
+    static LocationManager *sharedLocationManager;
     
     static dispatch_once_t onceToken;
     
     dispatch_once(&onceToken, ^{
         
-        _locationManager = [[LocationManager alloc] init];
+        sharedLocationManager = [[LocationManager alloc] init];
         
     });
     
-    return _locationManager;
+    return sharedLocationManager;
 }
 
 
@@ -63,9 +69,7 @@
     
     _locationManager.delegate = self;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [_locationManager requestAlwaysAuthorization];
-    
-    
+    [_locationManager requestAlwaysAuthorization];    
     
     return self;
 }
@@ -94,12 +98,9 @@
                 
                 --self.numberOfLocationSubscribers;
                 
-                if(self.numberOfLocationSubscribers == 0) {
-                    
+                if(self.numberOfLocationSubscribers == 0) {                    
                     [self.locationManager stopUpdatingLocation];
-                    
                 }
-                
             }
             
         }];
@@ -108,40 +109,85 @@
 
 - (BOOL)locationInRange:(CLLocation *)location
 {
-    return YES;
+    return [self location:location inRangeOf:self.targetA] ||
+            [self location:location inRangeOf:self.targetB];
 }
 
-- (NSNumber *)foundDestination
+- (BOOL)location:(CLLocation *)location inRangeOf:(TargetLocation *)target
 {
-    return @(NO);
+    CLLocation *targetLoc = [[CLLocation alloc] initWithLatitude:@(target.lat).doubleValue
+                                                       longitude:@(target.lng).doubleValue];
+    if ([location distanceFromLocation:targetLoc] < RADIUS_OF_DETECTION) {
+        return YES;
+    }
+    return NO;
 }
 
-- (RACSignal *)foundLocationSignalWithTargets:(NSDictionary *)targets {
+- (NSNumber *)aOrBResponseFromLocation:(CLLocation *)location {
+    return [self location:location inRangeOf:self.targetA] ? @(YES) : @(NO);
+}
+
+
+- (RACSignal *)foundLocationSignalWithJson:(NSDictionary *)json {
+    self.json = json[@"json"];
+
+    NSArray *targets = [json valueForKeyPath:kTargetKey];
+    self.targetA = [[TargetLocation alloc] initWithDictionary:targets[0]];
+    self.targetB = [[TargetLocation alloc] initWithDictionary:targets[1]];
+
     return [[[self updatedLocationSignal]
             filter:^BOOL(CLLocation *newLocation) {
                 return [self locationInRange:newLocation];
             }]
             map:^id(CLLocation *newLocation) {
-                return RACTuplePack([self foundDestination], [self fetchNextStorySignal]);
+                return RACTuplePack(@([self reachedDestination]), [self fetchNextStorySignalFromLocation:newLocation]);
             }];
 }
 
-- (RACSignal *)fetchNextStorySignal {
-    NSString *url = @"http://localhost:8080/story";
+- (BOOL)reachedDestination
+{
+    return ((NSNumber *) self.json[@"clueCount"]).intValue >= LAST_CHAPTER;
+}
+
+- (RACSignal *)fetchNextStorySignalFromLocation:(CLLocation *)loc {
     AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    NSDictionary *params = @{@"lat":@"37.4292", @"lng":@"-122.13181"};
-    return [manager rac_GET:url parameters:params];
-    
+    NSDictionary *params = @{@"lat":@(loc.coordinate.latitude),
+                             @"lng":@(loc.coordinate.longitude),
+                             @"a_or_b":[self aOrBResponseFromLocation:loc],
+                             @"json":[self jsonToString:self.json]};
+    return [manager rac_GET:STORY_URL parameters:params];
+}
+
+- (RACSignal *)fetchStorySignal {
+
+    return [[[self updatedLocationSignal]
+             take:1]
+            flattenMap:^(CLLocation *loc) {
+                AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+                manager.responseSerializer = [AFJSONResponseSerializer serializer];
+                NSDictionary *params = @{@"lat":@(loc.coordinate.latitude),
+                                         @"lng":@(loc.coordinate.longitude)};
+                return [manager rac_GET:STORY_URL parameters:params];
+            }];
+}
+
+- (NSString *)jsonToString:(NSDictionary *)json
+{
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:json
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return jsonString;
+
 }
 
 
-# pragma mark - CLLocationManagerDelegate 
 
+# pragma mark - CLLocationManagerDelegate
 
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    [self.locationSubject sendNext:newLocation];
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    [self.locationSubject sendNext:[locations lastObject]];
 }
 
 

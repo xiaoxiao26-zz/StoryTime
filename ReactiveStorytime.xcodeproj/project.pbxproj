@@ -18,6 +18,8 @@
 		7FC6F0DB1AAC379400127390 /* ReactiveStorytimeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FC6F0DA1AAC379400127390 /* ReactiveStorytimeTests.m */; };
 		7FCE7D711ADF948600127196 /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE7D701ADF948600127196 /* LocationManager.m */; };
 		7FCE7D741AE0725700127196 /* Globals.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE7D731AE0725700127196 /* Globals.m */; };
+		7FF19A0A1AE334B2008E7412 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FF19A091AE334B2008E7412 /* MapKit.framework */; };
+		7FF19A0D1AE343B7008E7412 /* TargetLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FF19A0C1AE343B7008E7412 /* TargetLocation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,9 @@
 		7FCE7D701ADF948600127196 /* LocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationManager.m; sourceTree = "<group>"; };
 		7FCE7D721AE0725700127196 /* Globals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Globals.h; sourceTree = "<group>"; };
 		7FCE7D731AE0725700127196 /* Globals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Globals.m; sourceTree = "<group>"; };
+		7FF19A091AE334B2008E7412 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		7FF19A0B1AE343B7008E7412 /* TargetLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TargetLocation.h; sourceTree = "<group>"; };
+		7FF19A0C1AE343B7008E7412 /* TargetLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TargetLocation.m; sourceTree = "<group>"; };
 		AC4919FA40860F1F5182EF1C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FF19A0A1AE334B2008E7412 /* MapKit.framework in Frameworks */,
 				60C6867D7997B3F0F99FF9D0 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,6 +83,7 @@
 		7286B90F80B00F2E7CA4DC85 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7FF19A091AE334B2008E7412 /* MapKit.framework */,
 				43D54B43090E34FA47C0B0B4 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -111,6 +118,8 @@
 				7FC6F0C61AAC379400127390 /* StoryViewController.m */,
 				7FCE7D6F1ADF948600127196 /* LocationManager.h */,
 				7FCE7D701ADF948600127196 /* LocationManager.m */,
+				7FF19A0B1AE343B7008E7412 /* TargetLocation.h */,
+				7FF19A0C1AE343B7008E7412 /* TargetLocation.m */,
 				7FB6696A1AB7CFC7005B26EB /* StoryManager.h */,
 				7FB6696B1AB7CFC7005B26EB /* StoryManager.m */,
 				7FCE7D721AE0725700127196 /* Globals.h */,
@@ -296,6 +305,7 @@
 				7FC6F0C71AAC379400127390 /* StoryViewController.m in Sources */,
 				7FCE7D711ADF948600127196 /* LocationManager.m in Sources */,
 				7FB6696C1AB7CFC7005B26EB /* StoryManager.m in Sources */,
+				7FF19A0D1AE343B7008E7412 /* TargetLocation.m in Sources */,
 				7FC6F0C41AAC379400127390 /* AppDelegate.m in Sources */,
 				7FCE7D741AE0725700127196 /* Globals.m in Sources */,
 				7FC6F0C11AAC379400127390 /* main.m in Sources */,

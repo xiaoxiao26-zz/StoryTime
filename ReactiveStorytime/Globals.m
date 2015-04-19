@@ -13,5 +13,6 @@
 NSString * const kStoryKey = @"text";
 NSString * const kJsonKey = @"json";
 NSString * const kStoryErrorDomain = @"kStoryErrorDomain";
+NSString * const kTargetKey = @"json.goto";
 
 @end

@@ -12,7 +12,9 @@
 
 extern NSString * const kStoryKey;
 extern NSString * const kJsonKey;
+extern NSString * const kTargetKey;
 extern NSString * const kStoryErrorDomain;
+
 
 typedef enum StoryErrorCode : NSUInteger {
     StoryErrorEmpty = 0

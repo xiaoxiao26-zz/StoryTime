@@ -11,7 +11,9 @@
 
 @interface LocationManager : NSObject
 
-- (RACSignal *)foundLocationSignalWithTargets:(NSDictionary *)targets;
+- (RACSignal *)foundLocationSignalWithJson:(NSDictionary *)json;
 + (LocationManager*) sharedManager;
+- (RACSignal *)updatedLocationSignal;
+- (RACSignal *)fetchStorySignal;
 
 @end
