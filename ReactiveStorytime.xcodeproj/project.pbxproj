@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		60C6867D7997B3F0F99FF9D0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43D54B43090E34FA47C0B0B4 /* libPods.a */; };
+		7F6834FE1AE5FD00006A1308 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F6834FD1AE5FD00006A1308 /* MapViewController.m */; };
 		7FB6696C1AB7CFC7005B26EB /* StoryManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB6696B1AB7CFC7005B26EB /* StoryManager.m */; };
 		7FC6F0C11AAC379400127390 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FC6F0C01AAC379400127390 /* main.m */; };
 		7FC6F0C41AAC379400127390 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FC6F0C31AAC379400127390 /* AppDelegate.m */; };
@@ -35,6 +36,8 @@
 /* Begin PBXFileReference section */
 		43D54B43090E34FA47C0B0B4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B5353A4C1D01C8DB82E691 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		7F6834FC1AE5FD00006A1308 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
+		7F6834FD1AE5FD00006A1308 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		7FB6696A1AB7CFC7005B26EB /* StoryManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoryManager.h; sourceTree = "<group>"; };
 		7FB6696B1AB7CFC7005B26EB /* StoryManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoryManager.m; sourceTree = "<group>"; };
 		7FC6F0BB1AAC379400127390 /* ReactiveStorytime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactiveStorytime.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,6 +125,8 @@
 				7FF19A0C1AE343B7008E7412 /* TargetLocation.m */,
 				7FB6696A1AB7CFC7005B26EB /* StoryManager.h */,
 				7FB6696B1AB7CFC7005B26EB /* StoryManager.m */,
+				7F6834FC1AE5FD00006A1308 /* MapViewController.h */,
+				7F6834FD1AE5FD00006A1308 /* MapViewController.m */,
 				7FCE7D721AE0725700127196 /* Globals.h */,
 				7FCE7D731AE0725700127196 /* Globals.m */,
 				7FC6F0C81AAC379400127390 /* Main.storyboard */,
@@ -305,6 +310,7 @@
 				7FC6F0C71AAC379400127390 /* StoryViewController.m in Sources */,
 				7FCE7D711ADF948600127196 /* StoryLocationManager.m in Sources */,
 				7FB6696C1AB7CFC7005B26EB /* StoryManager.m in Sources */,
+				7F6834FE1AE5FD00006A1308 /* MapViewController.m in Sources */,
 				7FF19A0D1AE343B7008E7412 /* TargetLocation.m in Sources */,
 				7FC6F0C41AAC379400127390 /* AppDelegate.m in Sources */,
 				7FCE7D741AE0725700127196 /* Globals.m in Sources */,

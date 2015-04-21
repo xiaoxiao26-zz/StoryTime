@@ -13,6 +13,7 @@
 #import "StoryLocationManager.h"
 #import "Globals.h"
 #import "TargetLocation.h"
+#import "MapViewController.h"
 #import <MapKit/MapKit.h>
 
 @interface StoryViewController ()
@@ -36,6 +37,8 @@
 @end
 
 @implementation StoryViewController
+
+NSString * const MAP_SEGUE_ID = @"map";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -103,9 +106,6 @@
 {
     
     NSString *story = result[kStoryKey];
-//    NSArray *targets = [result valueForKeyPath:kTargetKey];
-//    [self.targetAButton setTitle:targets[0][@"name"] forState:UIControlStateNormal];
-//    NSLog(@"%@", result);
     RACSignal *nextStorySignal = [[[RACSignal
                                     zip:@[[[StoryManager sharedManager] storySignalWithStory:story],
                                           [[StoryLocationManager sharedManager] foundLocationSignalWithJson:result]]
@@ -169,6 +169,15 @@
                                               return target.name;
                                           }],
                                          [RACSignal return:@(UIControlStateNormal)], nil];
+    [[self.targetAButton rac_signalForControlEvents:UIControlEventTouchUpInside]
+     subscribeNext:^(id x) {
+         [self performSegueWithIdentifier:MAP_SEGUE_ID sender:[StoryLocationManager sharedManager].targetA];
+     }];
+    
+    [[self.targetBButton rac_signalForControlEvents:UIControlEventTouchUpInside]
+     subscribeNext:^(id x) {
+         [self performSegueWithIdentifier:MAP_SEGUE_ID sender:[StoryLocationManager sharedManager].targetB];
+     }];
 
     RAC([UIApplication sharedApplication], networkActivityIndicatorVisible) = [RACSignal merge:@[self.fetchFirstStoryCommand.executing, self.fetchNextStoryCommand.executing]];
 }
@@ -205,6 +214,14 @@
     }] deliverOnMainThread];
     
     return mappedIntervalSignal;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:MAP_SEGUE_ID]) {
+        MapViewController *vc = segue.destinationViewController;
+        vc.target = sender;
+    }
 }
 
 

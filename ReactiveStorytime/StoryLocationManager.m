@@ -176,6 +176,7 @@ NSString * const STORY_URL = @"http://localhost:8080/story";
     return jsonString;
 }
 
+
 # pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {

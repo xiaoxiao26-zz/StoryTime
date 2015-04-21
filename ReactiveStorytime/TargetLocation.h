@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MapKit/MapKit.h>
 
-@interface TargetLocation : NSObject
+@interface TargetLocation : NSObject <MKAnnotation>
 
 @property (nonatomic) double lat;
 @property (nonatomic) double lng;

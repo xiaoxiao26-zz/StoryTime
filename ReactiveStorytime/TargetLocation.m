@@ -20,4 +20,14 @@
     return self;
 }
 
+- (CLLocationCoordinate2D)coordinate
+{
+    return CLLocationCoordinate2DMake(self.lat, self.lng);
+}
+
+- (NSString *)title
+{
+    return self.name;
+}
+            
 @end
