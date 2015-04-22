@@ -25,6 +25,10 @@
 
 @implementation StoryManager
 
+double const SPEECH_RATE = 0.7;
+double const PITCH_MULTIPLIER = 0.8;
+NSString * const LANGUAGE = @"en-GB";
+
 
 - (instancetype)init
 {
@@ -86,9 +90,9 @@
         [self.storySentences removeObjectAtIndex:0];
         
         AVSpeechUtterance *utterance = [[AVSpeechUtterance alloc] initWithString:nextText];
-        utterance.pitchMultiplier = 0.8;
+        utterance.pitchMultiplier = PITCH_MULTIPLIER;
         utterance.rate = 10.0;
-        utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-GB"];
+        utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:LANGUAGE];
         
         [self.speechSynthesizer speakUtterance:utterance];
     }
@@ -105,8 +109,5 @@
         [self.finishedStorySubject sendNext:nil];
     }
 }
-
-
-
 
 @end

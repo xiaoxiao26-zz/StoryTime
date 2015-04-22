@@ -29,9 +29,9 @@
 
 @implementation StoryLocationManager
 
-NSUInteger const RADIUS_OF_DETECTION = 1000000;
+NSUInteger const RADIUS_OF_DETECTION = 50;
 NSUInteger const LAST_CHAPTER = 5;
-NSString * const STORY_URL = @"http://localhost:8080/story";
+NSString * const STORY_URL = @"apjaffe.res.cmu.edu:8080/story?";
 
 + (instancetype) sharedManager {
     
@@ -122,6 +122,9 @@ NSString * const STORY_URL = @"http://localhost:8080/story";
     return [self location:location inRangeOf:self.targetA] ? @(YES) : @(NO);
 }
 
+- (TargetLocation *)getReachedTargetFromLocation:(CLLocation *)location {
+    return [self location:location inRangeOf:self.targetA] ? self.targetA : self.targetB;
+}
 
 - (RACSignal *)foundLocationSignalWithJson:(NSDictionary *)json {
     self.json = json[@"json"];
@@ -135,7 +138,9 @@ NSString * const STORY_URL = @"http://localhost:8080/story";
                 return [self locationInRange:newLocation];
             }]
             map:^id(CLLocation *newLocation) {
-                return RACTuplePack(@([self reachedDestination]), [self fetchNextStorySignalFromLocation:newLocation]);
+                return RACTuplePack(@([self reachedDestination]),
+                                    [self fetchNextStorySignalFromLocation:newLocation],
+                                    [self getReachedTargetFromLocation:newLocation]);
             }];
 }
 

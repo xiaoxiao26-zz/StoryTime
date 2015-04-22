@@ -2,3 +2,4 @@
 platform :ios, '8.0'
 pod 'ReactiveCocoa'
 pod 'AFNetworking-RACExtensions'
+pod 'TSMessages'

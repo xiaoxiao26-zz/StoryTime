@@ -14,6 +14,7 @@
 #import "Globals.h"
 #import "TargetLocation.h"
 #import "MapViewController.h"
+#import <TSMessages/TSMessage.h>
 #import <MapKit/MapKit.h>
 
 @interface StoryViewController ()
@@ -75,12 +76,37 @@ NSString * const MAP_SEGUE_ID = @"map";
     
     [[RACSignal merge:@[self.fetchFirstStoryCommand.errors,self.fetchNextStoryCommand.errors]]
         subscribeNext:^(NSError *error) {
-            [self showAlertWithTitle:@"Loading Story Error" message:error.localizedDescription];
+        [TSMessage showNotificationInViewController:self
+                                              title:@"Error loading story"
+                                           subtitle:error.localizedDescription
+                                               image:nil
+                                               type:TSMessageNotificationTypeError
+                                           duration:3.0
+                                           callback:nil
+                                        buttonTitle:nil
+                                     buttonCallback:nil
+                                         atPosition:TSMessageNotificationPositionTop
+                               canBeDismissedByUser:YES];
     }];
     
     self.finishedRunSubject = [RACSubject subject];
     self.timerCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
         return [[[self timerSignal] takeUntil:doneOrReset] takeUntil:self.finishedRunSubject];
+    }];
+    
+    [self.finishedRunSubject subscribeNext:^(NSString *time) {
+        [TSMessage showNotificationInViewController:self
+                                              title:@"Congragulations!"
+                                           subtitle:[NSString stringWithFormat:@"You finished the run with a time of: %@", time]
+                                              image:nil
+                                               type:TSMessageNotificationTypeSuccess
+                                           duration:10.0
+                                           callback:nil
+                                        buttonTitle:@"Share"
+                                     buttonCallback:^{
+                                         // not implemented
+                                     } atPosition:TSMessageNotificationPositionBottom
+                               canBeDismissedByUser:YES];
     }];
     
     
@@ -116,21 +142,27 @@ NSString * const MAP_SEGUE_ID = @"map";
                                     takeUntil:cancelSignal];
     
     [nextStorySignal subscribeNext:^(RACTuple *tuple) {
+        RACTupleUnpack(NSNumber *last, RACSignal *fetchNextStorySignal, TargetLocation *target) = tuple;
 
-        RACTupleUnpack(NSNumber *last, RACSignal *fetchNextStorySignal) = tuple;
         BOOL isDestination = last.boolValue;
         if (isDestination) {
-            [self finishedRun];
+            [self.finishedRunSubject sendNext:self.timerLabel.text];
         } else {
-
+            [TSMessage showNotificationInViewController:self
+                                                  title:[NSString stringWithFormat:@"Reached %@", target.name]
+                                               subtitle:@"The next chapter will be with you shortly"
+                                                  image:nil
+                                                   type:TSMessageNotificationTypeSuccess
+                                               duration:5.0
+                                               callback:nil
+                                            buttonTitle:nil
+                                         buttonCallback:^{
+                                             // not implemented
+                                         } atPosition:TSMessageNotificationPositionBottom
+                                   canBeDismissedByUser:YES];
             [self.fetchNextStoryCommand execute:fetchNextStorySignal];
         }
     }];
-}
-
-- (void)finishedRun
-{
-    [self.finishedRunSubject sendNext:nil];
 }
 
 - (void)bindUI {

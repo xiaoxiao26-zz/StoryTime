@@ -23,6 +23,7 @@ PODS:
   - AFNetworking/UIKit (2.5.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - HexColors (2.2.1)
   - ReactiveCocoa (2.4.7):
     - ReactiveCocoa/UI (= 2.4.7)
   - ReactiveCocoa/Core (2.4.7):
@@ -30,14 +31,19 @@ PODS:
   - ReactiveCocoa/no-arc (2.4.7)
   - ReactiveCocoa/UI (2.4.7):
     - ReactiveCocoa/Core
+  - TSMessages (0.9.12):
+    - HexColors
 
 DEPENDENCIES:
   - AFNetworking-RACExtensions
   - ReactiveCocoa
+  - TSMessages
 
 SPEC CHECKSUMS:
   AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
   AFNetworking-RACExtensions: 501ab1564f5be65e01fe3017cda7bba25764c20d
+  HexColors: abfd172e329dab59888614ccba6f216cec59289d
   ReactiveCocoa: eb38dee0a0e698f73a9b25e5c1faea2bb4c79240
+  TSMessages: 2a52642128d7ab15b46930c810b9c9403a2b58f3
 
 COCOAPODS: 0.36.3
